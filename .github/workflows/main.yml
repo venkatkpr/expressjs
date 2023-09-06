@@ -37,9 +37,10 @@ jobs:
 
       # Push Docker image to AWS ECR
       - name: Push Docker image to AWS ECR
-        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/:latest
+        run: docker push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com/test-venkat:latest
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+
 
       # Install SSH key for connecting to remote server
       - name: Install SSH key
