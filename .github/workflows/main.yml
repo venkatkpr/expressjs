@@ -1,0 +1,57 @@
+name: Docker Build, Push, and Pull
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-push-pull:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Configure AWS CLI
+      - name: Configure AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1  # Replace with your desired AWS region
+
+      # Build Docker image
+      - name: Build Docker image
+        run: docker build -t test-venkat:latest .
+
+      # Authenticate Docker to AWS ECR
+      - name: Authenticate Docker to AWS ECR
+        run: |
+          if ! aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com; then
+            echo "Docker authentication to ECR failed"
+            exit 1
+          fi
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+
+      # Push Docker image to AWS ECR
+      - name: Push Docker image to AWS ECR
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/:latest
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+
+      # Install SSH key for connecting to remote server
+      - name: Install SSH key
+        run: |
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Pull Docker image on remote server (replace with your server details)
+      - name: Pull Docker image on remote server
+        run: |
+          ssh -i ~/.ssh/id_rsa venkat@13.126.55.234 "docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/venkat-test:latest"
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
