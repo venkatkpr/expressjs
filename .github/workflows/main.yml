@@ -25,7 +25,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t test-venkat:latest .
-          docker tag test-venkat:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/test-venkat:latest
+          docker tag test-venkat:latest ${{ secrets.AWS_ACCOUNT_ID }}834716316828.dkr.ecr.ap-south-1.amazonaws.com/venkat-test
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 
