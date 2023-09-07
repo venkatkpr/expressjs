@@ -36,14 +36,9 @@ jobs:
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 
-      # Docker tag
-      - name: Docker tag
-        run: docker tag test-venkat:latest ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com/venkat-test:latest
-
-
       # Push Docker image to AWS ECR
       - name: Push Docker image to AWS ECR
-        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/venkat-test:latest
+        run: docker push ${{ secrets.AWS_ACCOUNT_ID }}834716316828.dkr.ecr.ap-south-1.amazonaws.com/venkat-test
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 
