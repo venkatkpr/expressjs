@@ -38,7 +38,7 @@ jobs:
 
       # Docker tag
       - name: Docker tag
-        run: docker tag test-venkat:latest ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com/test-venkat:latest
+        run: docker tag test-venkat:latest ${AWS_ACCOUNT_ID}.dkr.ecr.ap-south-1.amazonaws.com/venkat-test:latest
 
 
       # Push Docker image to AWS ECR
